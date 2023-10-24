@@ -1,0 +1,14 @@
+# STOP VM FROM AZURE AUTOMATION ACCOUNT - RUNBOOK
+
+# Import the Azure PowerShell module
+Import-Module Az
+
+# Connect to Azure using Azure Run As account
+Connect-AzAccount -Identity
+
+# Define the VM and resource group names
+$VMName = "mystagingvm"
+$ResourceGroupName = "stagingresources"
+
+# Stop the VM
+Stop-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName -Force
