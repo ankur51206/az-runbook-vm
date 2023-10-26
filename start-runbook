@@ -1,14 +1,24 @@
-# START VM FROM AZURE AUTOMATION ACCOUNT - RUNBOOK
-
 # Import the Azure PowerShell module
 Import-Module Az
 
 # Connect to Azure using Azure Run As account
 Connect-AzAccount -Identity
 
-# Define the VM and resource group names
-$VMName = "mystagingvm"
-$ResourceGroupName = "stagingresources"
+# Define an array of VMs and their specific resource groups
+$VMResourcePairs = @(
+    @{"VMName"="vm1"; "ResourceGroup"="rg1"},
+    @{"VMName"="vm2"; "ResourceGroup"="rg1"},
+    @{"VMName"="vm3"; "ResourceGroup"="rg2"},
+    @{"VMName"="vm4"; "ResourceGroup"="rg3"}
+)
+
+# Loop through the array and start each VM
+foreach ($pair in $VMResourcePairs) {
+    $VMName = $pair["VMName"]
+    $ResourceGroupName = $pair["ResourceGroup"]
+
+    Write-Output "Starting VM $VMName in resource group $ResourceGroupName"
 
 # Start the VM
 Start-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+}
