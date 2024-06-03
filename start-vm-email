@@ -1,0 +1,45 @@
+# Import the Azure PowerShell module
+Import-Module Az
+
+# Connect to Azure using Azure Run As account
+Connect-AzAccount -Identity
+
+
+# Define email parameters
+$smtpServer = "email-smtp.us-east-1.amazonaws.com"
+$smtpPort = 587
+$smtpUser = "username"
+$smtpPassword = "passwordhere"
+$from = "noreply@xxxxxxx.com"
+$to = "toemail@xxxxxxx.com"  # Specify the recipient's email address here
+$subject = "VM Start Notification"
+
+# Create SMTP credentials
+$securePassword = ConvertTo-SecureString $smtpPassword -AsPlainText -Force
+$credentials = New-Object System.Management.Automation.PSCredential ($smtpUser, $securePassword)
+
+# Define an array of VMs and their specific resource groups
+$VMResourcePairs = @(
+    @{"VMName"="test-sample"; "ResourceGroup"="test-sample"},
+    @{"VMName"="real"; "ResourceGroup"="REAL_GROUP"}
+)
+
+# Loop through the array and start each VM
+foreach ($pair in $VMResourcePairs) {
+    $VMName = $pair["VMName"]
+    $ResourceGroupName = $pair["ResourceGroup"]
+
+    Write-Output "Starting VM $VMName in resource group $ResourceGroupName"
+
+    # Start the VM
+    Start-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+
+    # Define the email body
+    $body = "The VM '$VMName' in resource group '$ResourceGroupName' has been started."
+
+    # Debugging output to check $to value
+    Write-Output "Recipient email: $to"
+
+    # Send email notification for each VM
+    Send-MailMessage -From $from -To $to -Subject $subject -Body $body -SmtpServer $smtpServer -Port $smtpPort -Credential $credentials -UseSsl
+}
