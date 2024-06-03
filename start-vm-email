@@ -6,12 +6,12 @@ Connect-AzAccount -Identity
 
 
 # Define email parameters
-$smtpServer = "email-smtp.us-east-1.amazonaws.com"
+$smtpServer = "hostnamehere"
 $smtpPort = 587
-$smtpUser = "username"
-$smtpPassword = "passwordhere"
-$from = "noreply@xxxxxxx.com"
-$to = "toemail@xxxxxxx.com"  # Specify the recipient's email address here
+$smtpUser = "userhere"
+$smtpPassword = "xxxxxxxxxxxxxxxx"
+$from = "noreply@email.com"
+$to = "ankur@email.com"  # Specify the recipient's email address here
 $subject = "VM Start Notification"
 
 # Create SMTP credentials
