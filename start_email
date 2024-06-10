@@ -23,6 +23,9 @@ $VMResourcePairs = @(
     @{"VMName"="real"; "ResourceGroup"="REAL_GROUP"}
 )
 
+# Initialize the email body
+$emailBody = "The following VMs have been started:`n`n"
+
 # Loop through the array and start each VM
 foreach ($pair in $VMResourcePairs) {
     $VMName = $pair["VMName"]
@@ -30,12 +33,27 @@ foreach ($pair in $VMResourcePairs) {
 
     Write-Output "Starting VM $VMName in resource group $ResourceGroupName"
 
-    # Start the VM
-    Start-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+    try {
+        # Start the VM
+        Start-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+        Write-Output "VM $VMName started successfully."
 
-    # Define the email body
-    $body = "The VM '$VMName' in resource group '$ResourceGroupName' has been started."
+        # Add VM details to the email body
+        $emailBody += "VM Name: $VMName`nResource Group: $ResourceGroupName`n`n"
+    } catch {
+        Write-Output "Failed to start VM $VMName in resource group $ResourceGroupName. Error: $_"
+        $emailBody += "Failed to start VM $VMName in resource group $ResourceGroupName. Error: $_`n`n"
+    }
+}
 
-    # Send email notification
-    Send-MailMessage -From $from -To $to -Subject $subject -Body $body -SmtpServer $smtpServer -Port $smtpPort -Credential $credentials -UseSsl
+# Debugging output to check email content and recipient
+Write-Output "Email body: $emailBody"
+Write-Output "Recipient email: $to"
+
+# Send the email notification
+try {
+    Send-MailMessage -From $from -To $to -Subject $subject -Body $emailBody -SmtpServer $smtpServer -Port $smtpPort -Credential $credentials -UseSsl
+    Write-Output "Email sent successfully."
+} catch {
+    Write-Output "Failed to send email. Error: $_"
 }
