@@ -5,12 +5,12 @@ Import-Module Az
 Connect-AzAccount -Identity
 
 # Define email parameters
-$smtpServer = "host"
+$smtpServer = "email-smtp.us-east-1.amazonaws.com"
 $smtpPort = 587
-$smtpUser = "xxxxxxxxxxxx"
-$smtpPassword = "xxxxxxxxxxxxxxxxx"
-$from = "noreply@xxxxxxx.com"
-$to = "xxxxxx@xxxxxxx.com"
+$smtpUser = "xxxxxxxxxxxxxxxxxxxxxxxx"
+$smtpPassword = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+$from = "noreply@ankur.com"
+$to = "hello@ankur.com"
 $subject = "VM Start Notification"
 
 # Create SMTP credentials
