@@ -1,6 +1,10 @@
 # Import the Azure PowerShell module
 Import-Module Az
 
+# Ensure you have the Az.Accounts module imported in the Automation Account
+Import-Module Az.Accounts
+Import-Module Az.Compute
+
 # Connect to Azure using Azure Run As account
 Connect-AzAccount -Identity
 
